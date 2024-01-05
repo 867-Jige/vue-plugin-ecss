@@ -1,7 +1,7 @@
 // 样式属性映射
 export const baseAttrsMap = {
   ac: "accent-color",
-  aCt: "align-content",
+  act: "align-content",
   ai: "align-items",
   as: "align-self",
   ab: "alignment-baseline",
