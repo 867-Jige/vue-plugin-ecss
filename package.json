@@ -1,8 +1,9 @@
 {
   "name": "vue-plugin-ecss",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "这是一个可根据类名快速自动生成样式代码的插件",
-  "main": "index.js",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
   "scripts": {
     "build": "vite build"
   },

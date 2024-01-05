@@ -11,7 +11,7 @@ export default class WebpackPluginVueEcss {
         (loaderContext, module) => {
           const resourcePath = module.resource;
           if (resourcePath && resourcePath.endsWith(".vue")) {
-            const fileContent = loaderContext.fs.readFile(
+            const fileContent = loaderContext.fs.readFileSync(
               resourcePath,
               "utf-8"
             );
