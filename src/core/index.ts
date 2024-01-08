@@ -1,5 +1,10 @@
 import { baseAttrsMap } from "../core/styleAttrsMap";
-const fs = require("fs");
+import { createVscodeTips } from "../vscode-tips";
+import {
+  createFile,
+  appendFileSync,
+  readFileSync,
+} from "../file-operation/index";
 type anyKey = {
   [key: string]: string;
 };
@@ -28,7 +33,7 @@ const colorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 export type Tconfig = {
   fileName?: string;
   prefix?: string;
-  attrMapExtension?: anyKey;
+  // attrMapExtension?: anyKey;
   outputPath?: string;
   attrDecollator?: string;
 };
@@ -37,8 +42,6 @@ let fileName: string = "ecss.css";
 // 文件扩展名
 // 类名前缀
 let prefix: string = "ecss";
-// 应用样式属性映射
-let appAttrMap = baseAttrsMap;
 // 输出文件的位置
 let outputPath: string = "";
 // 属性间的分割符
@@ -65,13 +68,9 @@ export function initConfig(config?: Tconfig) {
     outputPath = config.outputPath;
     fileName = outputPath.replace(/\\|\//g, "/").split("/").pop() || fileName;
   }
-
-  // 是否增加样式匹配项
-  if (config?.attrMapExtension) {
-    appAttrMap = Object.assign(appAttrMap, config.attrMapExtension);
-  }
   // 先创建样式文件
-  createFile("");
+  createFile(outputPath);
+  createVscodeTips();
 }
 
 /**
@@ -84,7 +83,7 @@ export function createStyle(path: string, fileConetn: string) {
   let templateString = cutOutTemplate(fileConetn);
   if (!templateString) {
     // vite5版本
-    const fileContent = fs.readFileSync(path, "utf-8");
+    const fileContent = readFileSync(path);
     templateString = cutOutTemplate(fileContent);
   }
   // 比较模板是否有修改
@@ -162,7 +161,7 @@ function matchStyle(classNames: string[]) {
           .filter((item) => item);
         let attr: string = attrNameAndValue[0] || "";
         let value: string = attrNameAndValue.slice(1).join(" ") || "";
-        let attrName = appAttrMap[attr];
+        let attrName = baseAttrsMap[attr];
         if (attrName && value) {
           if (attrName === "color") {
             value = colorRegex.test("#" + value) ? "#" + value : value;
@@ -174,24 +173,6 @@ function matchStyle(classNames: string[]) {
     }
   });
   if (cssFileContent) {
-    addStyleContent(cssFileContent);
+    appendFileSync(outputPath, cssFileContent);
   }
-}
-// 添加样式内容
-function addStyleContent(content) {
-  fs.appendFileSync(outputPath, content, fileCallback("appending"));
-}
-// 创建样式文件
-function createFile(content) {
-  fs.writeFile(outputPath, content, fileCallback("writeFile"));
-}
-// 文件回调
-function fileCallback(type) {
-  return (err) => {
-    if (err) {
-      console.error(`Error ${type} content to file:`, err);
-    } else {
-      console.log(`Content ${type} to file successfully.`);
-    }
-  };
 }
