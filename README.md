@@ -87,13 +87,13 @@ vitePluginVueEcss({
 # Tips：When you need to set a color, the color value in your class name does not need to be written with a # sign, for example:
 
 ```html
-<div class="ecss--fs-20px--color-blue ecss--bgc-ff0000"></div>
+<div class="ecss--ft_s-20px--color-blue ecss--bgc-ff0000"></div>
 ```
 
 ## The resulting style file is as follows
 
 ```css
-.ecss--fs-20px--color-blue {
+.ecss--ft_s-20px--color-blue {
   font-size: 20px !important;
   color: blue !important;
 }
