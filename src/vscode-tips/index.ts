@@ -26,23 +26,25 @@ function createCodeTips(path, content) {
 // 创建vscodetips配置
 function createSetting(path) {
   let fileData = "";
-  let content = `
-  {
-    "editor.quickSuggestions": {
-      "strings": true
-    }
-  }`;
+  let content = "";
+  let setKey = '"editor.quickSuggestions"';
   try {
     fileData = readFileSync(path);
     // 解析为 JavaScript 对象
     const fileContent = JSON.parse(fileData);
-    let strings = fileContent["editor.quickSuggestions"].strings;
+    let strings = fileContent[setKey].strings;
     if (!strings) {
-      fileContent["editor.quickSuggestions"].strings = true;
+      fileContent[setKey].strings = true;
+      content = JSON.stringify(fileContent, null, 2);
     }
-    content = JSON.stringify(fileContent, null, 2);
-  } catch (error) {}
-  createFile(path, content);
+  } catch (error) {
+    content = `{
+    ${setKey}: {
+      "strings": true
+    }
+  }`;
+  }
+  content && createFile(path, content);
 }
 // 获取代码提示片段
 function getCodeSnippet() {
