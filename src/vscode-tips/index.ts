@@ -1,14 +1,16 @@
 import { createFile, mkdirSync, readFileSync } from "../file-operation/index";
 import { baseAttrsMap } from "../core/styleAttrsMap";
 const findPackageJson = require("find-package-json");
-
+// 类名前缀
+let classPrefix = "ecss";
 // 获取项目根目录
 function getRootPath() {
   const rootPath = findPackageJson().next().filename;
   return rootPath.replace("package.json", "");
 }
 // 创建vscode配置
-export function createVscodeTips() {
+export function createVscodeTips(prefix: string) {
+  classPrefix = prefix;
   let rootPath = getRootPath();
   mkdirSync(rootPath + ".vscode").then(() => {
     createSetting(rootPath + ".vscode/settings.json");
@@ -25,11 +27,10 @@ function createCodeTips(path, content) {
 }
 // 创建vscodetips配置
 function createSetting(path) {
-  let fileData = "";
   let content = "";
   let setKey = '"editor.quickSuggestions"';
   try {
-    fileData = readFileSync(path);
+    let fileData = readFileSync(path);
     // 解析为 JavaScript 对象
     const fileContent = JSON.parse(fileData);
     let strings = fileContent[setKey].strings;
@@ -50,9 +51,10 @@ function createSetting(path) {
 function getCodeSnippet() {
   let codeSnippet = {};
   Object.keys(baseAttrsMap).forEach((key) => {
-    const content = "ecss--" + key + "-";
+    let prefix = classPrefix + "--";
+    const content = prefix + key + "-";
     codeSnippet[baseAttrsMap[key]] = {
-      prefix: content,
+      prefix: prefix + baseAttrsMap[key],
       body: [content],
     };
   });

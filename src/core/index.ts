@@ -39,7 +39,6 @@ export type Tconfig = {
 };
 // 输出文件名
 let fileName: string = "ecss.css";
-// 文件扩展名
 // 类名前缀
 let prefix: string = "ecss";
 // 输出文件的位置
@@ -70,7 +69,7 @@ export function initConfig(config?: Tconfig) {
   }
   // 先创建样式文件
   createFile(outputPath);
-  createVscodeTips();
+  createVscodeTips(prefix);
 }
 
 /**
