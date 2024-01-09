@@ -3,14 +3,22 @@ import { baseAttrsMap } from "../core/styleAttrsMap";
 const findPackageJson = require("find-package-json");
 // 类名前缀
 let classPrefix = "ecss";
+let attrDecollator = "--";
+let attrValueDecollator = "__";
 // 获取项目根目录
 function getRootPath() {
   const rootPath = findPackageJson().next().filename;
   return rootPath.replace("package.json", "");
 }
 // 创建vscode配置
-export function createVscodeTips(prefix: string) {
+export function createVscodeTips(
+  prefix: string,
+  decollator: string,
+  valueDecollator: string
+) {
   classPrefix = prefix;
+  attrDecollator = decollator;
+  attrValueDecollator = valueDecollator;
   let rootPath = getRootPath();
   mkdirSync(rootPath + ".vscode").then(() => {
     createSetting(rootPath + ".vscode/settings.json");
@@ -31,7 +39,6 @@ function createSetting(path) {
   let setKey = '"editor.quickSuggestions"';
   try {
     let fileData = readFileSync(path);
-    // 解析为 JavaScript 对象
     const fileContent = JSON.parse(fileData);
     let strings = fileContent[setKey].strings;
     if (!strings) {
@@ -51,8 +58,8 @@ function createSetting(path) {
 function getCodeSnippet() {
   let codeSnippet = {};
   Object.keys(baseAttrsMap).forEach((key) => {
-    let prefix = classPrefix + "--";
-    const content = prefix + key + "-";
+    let prefix = classPrefix + attrDecollator;
+    const content = prefix + key + attrValueDecollator;
     codeSnippet[baseAttrsMap[key]] = {
       prefix: prefix + baseAttrsMap[key],
       body: [content],
