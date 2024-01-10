@@ -60,6 +60,8 @@ vitePluginVueEcss({
 
 ```
 
+## Then you need to reference the created style file in your project
+
 ## Rules written for class names
 
 ### Prefix and attribute are separated by '--', when multiple attributes are set in a class name, they are also separated by '--', when multiple values need to be set in a property, the attribute values are separated by '\_\_'. Specifically as follows
