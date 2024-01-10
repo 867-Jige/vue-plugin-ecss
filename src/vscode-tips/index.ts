@@ -1,5 +1,5 @@
 import { createFile, mkdirSync, readFileSync } from "../file-operation/index";
-import { baseAttrsMap } from "../core/styleAttrsMap";
+import { baseAttrsMap, builtInValue } from "../core/styleAttrsMap";
 const findPackageJson = require("find-package-json");
 // 类名前缀
 let classPrefix = "ecss";
@@ -54,16 +54,29 @@ function createSetting(path) {
   }
   content && createFile(path, content);
 }
+
 // 获取代码提示片段
 function getCodeSnippet() {
   let codeSnippet = {};
   Object.keys(baseAttrsMap).forEach((key) => {
     let prefix = classPrefix + attrDecollator;
     const content = prefix + key + attrValueDecollator;
-    codeSnippet[baseAttrsMap[key]] = {
-      prefix: prefix + baseAttrsMap[key],
+    const attrName = baseAttrsMap[key];
+    codeSnippet[attrName] = {
+      prefix: prefix + attrName,
       body: [content],
     };
+    let builtInValues = builtInValue[attrName];
+    if (builtInValues) {
+      builtInValues.forEach((val) => {
+        let value = val.replaceAll(" ", attrValueDecollator);
+        let valueTips = attrName + attrValueDecollator + value;
+        codeSnippet[valueTips] = {
+          prefix: prefix + valueTips,
+          body: [content + value],
+        };
+      });
+    }
   });
   return codeSnippet;
 }

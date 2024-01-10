@@ -48,14 +48,14 @@ vitePluginVueEcss({
   /**
    *   The class name matches the prefix. Default  'ecss'
    * */
-    prefix: string
+    prefix: string,
 
   /**
    * The output path of the style file. Default  './' + fileName .
    * Note: When this value is set, the values of fileName are reassigned with the corresponding string from the path.
    * The plug-in creates a file based on the path, and you can import the file into your project
    * */
-    outputPath：string
+    outputPath: string
 }),
 
 ```
